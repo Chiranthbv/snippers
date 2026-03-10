@@ -1,0 +1,32 @@
+package com.codesnippers.repository;
+
+import com.codesnippers.model.Snippet;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+
+public interface SnippetRepository extends JpaRepository<Snippet, Long> {
+
+    Optional<Snippet> findByShortUrl(String shortUrl);
+
+    List<Snippet> findByUserIdOrderByCreatedAtDesc(Long userId);
+
+    @Query("SELECT s FROM Snippet s WHERE s.visibility = 'PUBLIC' " +
+           "AND (:language IS NULL OR LOWER(s.language) = LOWER(:language)) " +
+           "AND (:search IS NULL OR (LOWER(s.title) LIKE LOWER(CONCAT('%', :search, '%')) " +
+           "OR LOWER(s.content) LIKE LOWER(CONCAT('%', :search, '%'))))")
+    Page<Snippet> findPublicSnippets(
+            @Param("language") String language,
+            @Param("search") String search,
+            Pageable pageable);
+
+    List<Snippet> findByExpiresAtBeforeAndExpiresAtIsNotNull(LocalDateTime dateTime);
+
+    boolean existsByShortUrl(String shortUrl);
+}
