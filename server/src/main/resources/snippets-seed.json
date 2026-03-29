@@ -1,0 +1,152 @@
+[
+    {
+        "title": "Debounce Function",
+        "language": "javascript",
+        "content": "export function debounce(func, wait) {\n  let timeout;\n  return function executedFunction(...args) {\n    const later = () => {\n      clearTimeout(timeout);\n      func(...args);\n    };\n    clearTimeout(timeout);\n    timeout = setTimeout(later, wait);\n  };\n}"
+    },
+    {
+        "title": "React useDidMount Hook",
+        "language": "typescript",
+        "content": "import { useEffect, useRef } from 'react';\n\nexport const useDidMount = () => {\n  const mountRef = useRef(false);\n  useEffect(() => {\n    mountRef.current = true;\n  }, []);\n  return mountRef.current;\n};"
+    },
+    {
+        "title": "Deep Merge Objects",
+        "language": "typescript",
+        "content": "export function isObject(item: any) {\n  return (item && typeof item === 'object' && !Array.isArray(item));\n}\n\nexport function mergeDeep(target: any, ...sources: any[]): any {\n  if (!sources.length) return target;\n  const source = sources.shift();\n\n  if (isObject(target) && isObject(source)) {\n    for (const key in source) {\n      if (isObject(source[key])) {\n        if (!target[key]) Object.assign(target, { [key]: {} });\n        mergeDeep(target[key], source[key]);\n      } else {\n        Object.assign(target, { [key]: source[key] });\n      }\n    }\n  }\n  return mergeDeep(target, ...sources);\n}"
+    },
+    {
+        "title": "Python Timer Decorator",
+        "language": "python",
+        "content": "import functools\nimport time\n\ndef timer(func):\n    @functools.wraps(func)\n    def wrapper_timer(*args, **kwargs):\n        start_time = time.perf_counter()\n        value = func(*args, **kwargs)\n        end_time = time.perf_counter()\n        run_time = end_time - start_time\n        print(f\"Finished {func.__name__} in {run_time:.4f} secs\")\n        return value\n    return wrapper_timer"
+    },
+    {
+        "title": "Python Flatten Nested List",
+        "language": "python",
+        "content": "def flatten_list(nested_list):\n    return [item for sublist in nested_list for item in sublist]\n\n# Example usage:\n# matrix = [[1, 2, 3], [4, 5], [6, 7, 8, 9]]\n# print(flatten_list(matrix))"
+    },
+    {
+        "title": "Center a Div (Modern CSS)",
+        "language": "css",
+        "content": ".center-container {\n  display: grid;\n  place-items: center;\n  min-height: 100vh;\n}"
+    },
+    {
+        "title": "CSS Custom Scrollbar",
+        "language": "css",
+        "content": "/* WebKit browsers */\n::-webkit-scrollbar {\n  width: 8px;\n  height: 8px;\n}\n\n::-webkit-scrollbar-track {\n  background: #f1f1f1;\n  border-radius: 4px;\n}\n\n::-webkit-scrollbar-thumb {\n  background: #888;\n  border-radius: 4px;\n}\n\n::-webkit-scrollbar-thumb:hover {\n  background: #555;\n}"
+    },
+    {
+        "title": "Java Read File to String",
+        "language": "java",
+        "content": "import java.nio.file.Files;\nimport java.nio.file.Paths;\nimport java.io.IOException;\n\npublic class FileReader {\n    public static String readFileAsString(String fileName) throws IOException {\n        return new String(Files.readAllBytes(Paths.get(fileName)));\n    }\n}"
+    },
+    {
+        "title": "Java Stream Filter & Map",
+        "language": "java",
+        "content": "import java.util.List;\nimport java.util.stream.Collectors;\n\npublic class StreamExample {\n    public List<String> getAdultNames(List<Person> people) {\n        return people.stream()\n            .filter(p -> p.getAge() >= 18)\n            .map(Person::getName)\n            .collect(Collectors.toList());\n    }\n}"
+    },
+    {
+        "title": "Go Read HTTP JSON Response",
+        "language": "go",
+        "content": "package main\n\nimport (\n\t\"encoding/json\"\n\t\"net/http\"\n)\n\ntype ApiResponse struct {\n\tStatus  string `json:\"status\"`\n\tMessage string `json:\"message\"`\n}\n\nfunc fetchJson(url string) (*ApiResponse, error) {\n\tresp, err := http.Get(url)\n\tif err != nil {\n\t\treturn nil, err\n\t}\n\tdefer resp.Body.Close()\n\n\tvar result ApiResponse\n\tif err := json.NewDecoder(resp.Body).Decode(&result); err != nil {\n\t\treturn nil, err\n\t}\n\treturn &result, nil\n}"
+    },
+    {
+        "title": "Go Concurrent Workers",
+        "language": "go",
+        "content": "package main\n\nimport (\n\t\"sync\"\n)\n\nfunc worker(id int, jobs <-chan int, results chan<- int, wg *sync.WaitGroup) {\n\tdefer wg.Done()\n\tfor j := range jobs {\n\t\t// Do work here\n\t\tresults <- j * 2\n\t}\n}\n\nfunc startPool(numWorkers int, numJobs int) {\n\tjobs := make(chan int, numJobs)\n\tresults := make(chan int, numJobs)\n\tvar wg sync.WaitGroup\n\n\tfor w := 1; w <= numWorkers; w++ {\n\t\twg.Add(1)\n\t\tgo worker(w, jobs, results, &wg)\n\t}\n\n\tfor j := 1; j <= numJobs; j++ {\n\t\tjobs <- j\n\t}\n\tclose(jobs)\n\n\twg.Wait()\n\tclose(results)\n}"
+    },
+    {
+        "title": "Rust Read File Lines",
+        "language": "rust",
+        "content": "use std::fs::File;\nuse std::io::{self, BufRead};\nuse std::path::Path;\n\nfn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>>\nwhere P: AsRef<Path>, {\n    let file = File::open(filename)?;\n    Ok(io::BufReader::new(file).lines())\n}\n\n// Usage:\n// if let Ok(lines) = read_lines(\"hosts.txt\") {\n//     for line in lines {\n//         if let Ok(ip) = line {\n//             println!(\"{}\", ip);\n//         }\n//     }\n// }"
+    },
+    {
+        "title": "Bash Extract Archive",
+        "language": "bash",
+        "content": "extract() {\n  if [ -f $1 ] ; then\n    case $1 in\n      *.tar.bz2)   tar xjf $1     ;;\n      *.tar.gz)    tar xzf $1     ;;\n      *.bz2)       bunzip2 $1     ;;\n      *.rar)       unrar x $1     ;;\n      *.gz)        gunzip $1      ;;\n      *.tar)       tar xf $1      ;;\n      *.tbz2)      tar xjf $1     ;;\n      *.tgz)       tar xzf $1     ;;\n      *.zip)       unzip $1       ;;\n      *.Z)         uncompress $1  ;;\n      *.7z)        7z x $1        ;;\n      *)           echo \"'$1' cannot be extracted via extract()\" ;;\n    esac\n  else\n    echo \"'$1' is not a valid file\"\n  fi\n}"
+    },
+    {
+        "title": "SQL Upsert (PostgreSQL)",
+        "language": "sql",
+        "content": "INSERT INTO users (id, name, email, last_login)\nVALUES (1, 'Alice', 'alice@example.com', CURRENT_TIMESTAMP)\nON CONFLICT (id) \nDO UPDATE SET \n    name = EXCLUDED.name,\n    email = EXCLUDED.email,\n    last_login = EXCLUDED.last_login;"
+    },
+    {
+        "title": "PostgreSQL Recursive CTE",
+        "language": "sql",
+        "content": "WITH RECURSIVE employee_hierarchy AS (\n    SELECT id, name, manager_id, 1 AS depth\n    FROM employees\n    WHERE manager_id IS NULL\n    \n    UNION ALL\n    \n    SELECT e.id, e.name, e.manager_id, ep.depth + 1\n    FROM employees e\n    JOIN employee_hierarchy ep ON e.manager_id = ep.id\n)\nSELECT * FROM employee_hierarchy \nORDER BY depth;"
+    },
+    {
+        "title": "C++ Read Entire File into Memory",
+        "language": "cpp",
+        "content": "#include <fstream>\n#include <sstream>\n#include <string>\n\nstd::string readFile(const std::string& filepath) {\n    std::ifstream stream(filepath);\n    if (!stream.is_open()) return \"\";\n    \n    std::stringstream buffer;\n    buffer << stream.rdbuf();\n    return buffer.str();\n}"
+    },
+    {
+        "title": "C# Read JSON Config",
+        "language": "csharp",
+        "content": "using System.IO;\nusing System.Text.Json;\nusing System.Threading.Tasks;\n\npublic class AppConfig { public string ApiKey { get; set; } }\n\npublic static async Task<AppConfig> LoadConfigAsync(string path)\n{\n    using FileStream openStream = File.OpenRead(path);\n    return await JsonSerializer.DeserializeAsync<AppConfig>(openStream);\n}"
+    },
+    {
+        "title": "Swift Decode JSON Array",
+        "language": "swift",
+        "content": "struct User: Codable {\n    let id: Int\n    let name: String\n}\n\nfunc parseUsers(jsonData: Data) -> [User]? {\n    let decoder = JSONDecoder()\n    do {\n        let users = try decoder.decode([User].self, from: jsonData)\n        return users\n    } catch {\n        print(\"Error decoding: \\(error)\")\n        return nil\n    }\n}"
+    },
+    {
+        "title": "Kotlin Find Max by Property",
+        "language": "kotlin",
+        "content": "data class Product(val name: String, val price: Double)\n\nfun findMostExpensive(products: List<Product>): Product? {\n    return products.maxByOrNull { it.price }\n}"
+    },
+    {
+        "title": "PHP PDO Database Connection",
+        "language": "php",
+        "content": "<?php\n$host = '127.0.0.1';\n$db   = 'test_db';\n$user = 'root';\n$pass = '';\n$charset = 'utf8mb4';\n\n$dsn = \"mysql:host=$host;dbname=$db;charset=$charset\";\n$options = [\n    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,\n    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,\n    PDO::ATTR_EMULATE_PREPARES   => false,\n];\n\ntry {\n     $pdo = new PDO($dsn, $user, $pass, $options);\n} catch (\\PDOException $e) {\n     throw new \\PDOException($e->getMessage(), (int)$e->getCode());\n}\n?>"
+    },
+    {
+        "title": "Ruby Convert Hash to Query String",
+        "language": "ruby",
+        "content": "require 'uri'\n\ndef to_query_string(hash)\n  URI.encode_www_form(hash)\nend\n\n# Usage:\n# params = { q: 'ruby', page: 2 }\n# puts to_query_string(params) \n# => \"q=ruby&page=2\""
+    },
+    {
+        "title": "C# LINQ GroupBy and Select",
+        "language": "csharp",
+        "content": "var categoryStats = products\n    .GroupBy(p => p.Category)\n    .Select(g => new \n    {\n        Category = g.Key,\n        TotalValue = g.Sum(p => p.Price * p.Stock),\n        AveragePrice = g.Average(p => p.Price),\n        Count = g.Count()\n    })\n    .OrderByDescending(stat => stat.TotalValue)\n    .ToList();"
+    },
+    {
+        "title": "React Create Context with TypeScript",
+        "language": "typescript",
+        "content": "import React, { createContext, useContext, useState, ReactNode } from 'react';\n\ninterface AuthContextType {\n  user: { name: string } | null;\n  login: (name: string) => void;\n  logout: () => void;\n}\n\nconst AuthContext = createContext<AuthContextType | undefined>(undefined);\n\nexport const AuthProvider = ({ children }: { children: ReactNode }) => {\n  const [user, setUser] = useState<{ name: string } | null>(null);\n  const login = (name: string) => setUser({ name });\n  const logout = () => setUser(null);\n  \n  return (\n    <AuthContext.Provider value={{ user, login, logout }}>\n      {children}\n    </AuthContext.Provider>\n  );\n};\n\nexport const useAuth = () => {\n  const context = useContext(AuthContext);\n  if (context === undefined) {\n    throw new Error('useAuth must be used within an AuthProvider');\n  }\n  return context;\n};"
+    },
+    {
+        "title": "TypeScript Ensure Exhaustive Switch",
+        "language": "typescript",
+        "content": "function assertNever(x: never): never {\n  throw new Error(\"Unexpected object: \" + x);\n}\n\ntype Action = { type: 'ADD' } | { type: 'REMOVE' };\n\nfunction reducer(action: Action) {\n  switch (action.type) {\n    case 'ADD':\n      return 'adding';\n    case 'REMOVE':\n      return 'removing';\n    default:\n      // TypeScript will error here if a new Action type is added but not handled\n      return assertNever(action);\n  }\n}"
+    },
+    {
+        "title": "HTML5 Boilerplate",
+        "language": "html",
+        "content": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <meta http-equiv=\"X-UA-Compatible\" content=\"ie=edge\">\n    <title>HTML 5 Boilerplate</title>\n    <link rel=\"stylesheet\" href=\"styles.css\">\n</head>\n<body>\n    <main>\n        <h1>Welcome</h1>\n    </main>\n    <script src=\"app.js\"></script>\n</body>\n</html>"
+    },
+    {
+        "title": "CSS Grid Holy Grail Layout",
+        "language": "css",
+        "content": ".layout {\n  display: grid;\n  grid-template-areas:\n    \"header header header\"\n    \"nav    main   aside\"\n    \"footer footer footer\";\n  grid-template-rows: auto 1fr auto;\n  grid-template-columns: 200px 1fr 200px;\n  min-height: 100vh;\n}\n\nheader { grid-area: header; }\nnav    { grid-area: nav; }\nmain   { grid-area: main; }\naside  { grid-area: aside; }\nfooter { grid-area: footer; }\n\n/* Responsive */\n@media (max-width: 768px) {\n  .layout {\n    grid-template-areas:\n      \"header\"\n      \"nav\"\n      \"main\"\n      \"aside\"\n      \"footer\";\n    grid-template-columns: 1fr;\n  }\n}"
+    },
+    {
+        "title": "Python Concurrent API Requests",
+        "language": "python",
+        "content": "import asyncio\nimport aiohttp\n\nasync def fetch(session, url):\n    async with session.get(url) as response:\n        return await response.json()\n\nasync def fetch_all(urls):\n    async with aiohttp.ClientSession() as session:\n        tasks = [fetch(session, url) for url in urls]\n        return await asyncio.gather(*tasks)\n\n# Usage:\n# urls = [\"https://api.example.com/data1\", \"https://api.example.com/data2\"]\n# results = asyncio.run(fetch_all(urls))"
+    },
+    {
+        "title": "Git Undo Last Commit (Keep Changes)",
+        "language": "bash",
+        "content": "# Soft reset moves HEAD back but keeps your files modified\ngit reset --soft HEAD~1\n\n# Option 2: If you just want to add a forgotten file to the last commit\ngit add forgotten_file.js\ngit commit --amend --no-edit"
+    },
+    {
+        "title": "Docker Compose PostgreSQL Setup",
+        "language": "yaml",
+        "content": "version: '3.8'\nservices:\n  db:\n    image: postgres:15-alpine\n    restart: always\n    environment:\n      POSTGRES_USER: myuser\n      POSTGRES_PASSWORD: mypassword\n      POSTGRES_DB: mydatabase\n    ports:\n      - \"5432:5432\"\n    volumes:\n      - pgdata:/var/lib/postgresql/data\n\nvolumes:\n  pgdata:"
+    },
+    {
+        "title": "Next.js 14 Server Action Form",
+        "language": "typescript",
+        "content": "import { revalidatePath } from 'next/cache';\n\n// Backend logic\nasync function createPost(formData: FormData) {\n  'use server'\n  const title = formData.get('title');\n  const content = formData.get('content');\n  \n  await db.posts.insert({ title, content });\n  revalidatePath('/posts');\n}\n\n// Frontend Component\nexport default function NewPostForm() {\n  return (\n    <form action={createPost}>\n      <input name=\"title\" required />\n      <textarea name=\"content\" required />\n      <button type=\"submit\">Create Post</button>\n    </form>\n  );\n}"
+    }
+]
