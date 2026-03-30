@@ -30,6 +30,7 @@ export default function CreateSnippetPage() {
     const [language, setLanguage] = useState("JavaScript");
     const [content, setContent] = useState("");
     const [visibility, setVisibility] = useState<"PUBLIC" | "PRIVATE">("PUBLIC");
+    const [expiresAt, setExpiresAt] = useState("");
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
@@ -54,6 +55,7 @@ export default function CreateSnippetPage() {
                 language: language.toLowerCase(),
                 content,
                 visibility,
+                expiresAt: expiresAt ? new Date(expiresAt).toISOString() : null,
             });
             toast.success("Snippet created!");
             router.push(`/s/${snippet.shortUrl}`);
@@ -162,6 +164,19 @@ export default function CreateSnippetPage() {
                                         </button>
                                     </div>
                                 </div>
+                            </div>
+
+                            {/* Expiry Date */}
+                            <div>
+                                <label className="text-sm text-txt-muted mb-1.5 block font-medium">
+                                    Expiry Date <span className="text-xs opacity-50">(Optional)</span>
+                                </label>
+                                <input
+                                    type="datetime-local"
+                                    value={expiresAt}
+                                    onChange={(e) => setExpiresAt(e.target.value)}
+                                    className="input-dark"
+                                />
                             </div>
 
                             {/* Code Content */}

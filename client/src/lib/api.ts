@@ -48,6 +48,7 @@ export interface CreateSnippetPayload {
     content: string;
     language: string;
     visibility: "PUBLIC" | "PRIVATE";
+    expiresAt?: string | null;
 }
 
 export interface AuthResponse {

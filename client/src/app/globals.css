@@ -459,64 +459,6 @@ pre[class*="language-"] {
 
 /* ─── Mobile Responsiveness ─── */
 
-/* Ensure proper viewport behaviour */
-@media (max-width: 640px) {
-  body {
-    -webkit-text-size-adjust: 100%;
-  }
-
-  /* Smaller padding on mobile */
-  .max-w-container {
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
-
-  /* Code blocks: prevent overflow */
-  .code-block pre {
-    padding: 12px;
-    font-size: 12px;
-    line-height: 1.5;
-  }
-
-  /* Line numbers: narrower */
-  .line-numbers .line::before {
-    width: 2em;
-    margin-right: 0.5em;
-    font-size: 11px;
-  }
-
-  /* Gradient orbs: smaller on mobile */
-  .gradient-orb {
-    width: 200px !important;
-    height: 200px !important;
-    filter: blur(60px);
-  }
-
-  /* Glass cards: less padding */
-  .glass-card,
-  .glass-card-static {
-    border-radius: 12px;
-  }
-
-  /* Buttons: easier tap targets */
-  .btn-primary,
-  .btn-secondary {
-    min-height: 44px;
-    padding: 10px 20px;
-  }
-
-  /* Code block header */
-  .code-block-header {
-    padding: 8px 12px;
-  }
-
-  /* Badge */
-  .badge {
-    font-size: 11px;
-    padding: 3px 8px;
-  }
-}
-
 /* Scrollable language filter tabs */
 .language-tabs {
   display: flex;

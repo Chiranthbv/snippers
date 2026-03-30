@@ -68,7 +68,7 @@ export default function BrowsePage() {
         <div className="min-h-screen relative">
             <div className="gradient-orb gradient-orb-blue w-[300px] h-[300px] -top-20 right-10 opacity-20" />
 
-            <div className="max-w-container mx-auto px-6 py-12">
+            <div className="w-full md:max-w-container mx-auto px-4 sm:px-6 py-12">
                 {/* Header */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
@@ -103,9 +103,9 @@ export default function BrowsePage() {
                         />
                     </div>
 
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center w-full gap-4">
                         {/* Language Tabs */}
-                        <div className="language-tabs flex-1">
+                        <div className="language-tabs flex-1 w-full">
                             {LANGUAGES.map((lang) => (
                                 <button
                                     key={lang}

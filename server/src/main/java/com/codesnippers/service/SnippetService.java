@@ -36,7 +36,7 @@ public class SnippetService {
                 .language(request.getLanguage())
                 .visibility(Snippet.Visibility.valueOf(request.getVisibility()))
                 .shortUrl(generateShortUrl())
-                .expiresAt(null) // All user snippets are permanent
+                .expiresAt(request.getExpiresAt()) // User provides optional expiry
                 .permanent(false)
                 .user(user)
                 .build();

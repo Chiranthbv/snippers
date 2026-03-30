@@ -18,9 +18,9 @@ public interface SnippetRepository extends JpaRepository<Snippet, Long> {
     List<Snippet> findByUserIdOrderByCreatedAtDesc(Long userId);
 
     @Query("SELECT s FROM Snippet s WHERE s.visibility = 'PUBLIC' " +
-           "AND (:language IS NULL OR LOWER(s.language) = LOWER(:language)) " +
-           "AND (:search IS NULL OR (LOWER(s.title) LIKE LOWER(CONCAT('%', :search, '%')) " +
-           "OR LOWER(s.content) LIKE LOWER(CONCAT('%', :search, '%'))))")
+           "AND (CAST(:language AS text) IS NULL OR LOWER(s.language) = LOWER(CAST(:language AS text))) " +
+           "AND (CAST(:search AS text) IS NULL OR (LOWER(s.title) LIKE LOWER(CONCAT('%', CAST(:search AS text), '%')) " +
+           "OR LOWER(s.content) LIKE LOWER(CONCAT('%', CAST(:search AS text), '%'))))")
     Page<Snippet> findPublicSnippets(
             @Param("language") String language,
             @Param("search") String search,

@@ -108,7 +108,7 @@ export default function LandingPage() {
         <div className="gradient-orb gradient-orb-purple w-[400px] h-[400px] top-40 right-[-100px]" />
         <div className="gradient-orb gradient-orb-teal w-[300px] h-[300px] bottom-20 left-1/4 opacity-20" />
 
-        <div className="relative z-10 max-w-container mx-auto px-6 text-center">
+        <div className="relative z-10 w-full md:max-w-container mx-auto px-4 sm:px-6 text-center">
           <motion.div
             initial="initial"
             animate="animate"
