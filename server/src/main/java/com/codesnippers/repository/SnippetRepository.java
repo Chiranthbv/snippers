@@ -11,20 +11,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-public interface SnippetRepository extends JpaRepository<Snippet, Long> {
+public interface SnippetRepository extends JpaRepository<Snippet, Long>, org.springframework.data.jpa.repository.JpaSpecificationExecutor<Snippet> {
 
     Optional<Snippet> findByShortUrl(String shortUrl);
 
     List<Snippet> findByUserIdOrderByCreatedAtDesc(Long userId);
 
-    @Query("SELECT s FROM Snippet s WHERE s.visibility = 'PUBLIC' " +
-           "AND (:language = '' OR LOWER(s.language) = LOWER(:language)) " +
-           "AND (:search = '' OR (LOWER(s.title) LIKE LOWER(CONCAT('%', :search, '%')) " +
-           "OR LOWER(s.content) LIKE LOWER(CONCAT('%', :search, '%'))))")
-    Page<Snippet> findPublicSnippets(
-            @Param("language") String language,
-            @Param("search") String search,
-            Pageable pageable);
+
 
     List<Snippet> findByExpiresAtBeforeAndExpiresAtIsNotNullAndPermanentFalse(LocalDateTime dateTime);
 

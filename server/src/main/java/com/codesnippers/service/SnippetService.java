@@ -13,6 +13,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.jpa.domain.Specification;
+import jakarta.persistence.criteria.Predicate;
+import java.util.ArrayList;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -51,10 +54,27 @@ public class SnippetService {
                 : Sort.by(Sort.Direction.DESC, "createdAt");
 
         Pageable pageable = PageRequest.of(page, size, sorting);
-        Page<Snippet> snippets = snippetRepository.findPublicSnippets(
-                language != null && !language.isBlank() ? language : "",
-                search != null && !search.isBlank() ? search : "",
-                pageable);
+
+        Specification<Snippet> spec = (root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            predicates.add(cb.equal(root.get("visibility"), Snippet.Visibility.PUBLIC));
+
+            if (language != null && !language.isBlank()) {
+                predicates.add(cb.equal(cb.lower(root.get("language")), language.trim().toLowerCase()));
+            }
+
+            if (search != null && !search.isBlank()) {
+                String pattern = "%" + search.trim().toLowerCase() + "%";
+                Predicate titleLike = cb.like(cb.lower(root.get("title")), pattern);
+                Predicate contentLike = cb.like(cb.lower(root.get("content")), pattern);
+                predicates.add(cb.or(titleLike, contentLike));
+            }
+
+            // Must have this array typing for varargs
+            return cb.and(predicates.toArray(new Predicate[0]));
+        };
+
+        Page<Snippet> snippets = snippetRepository.findAll(spec, pageable);
 
         return snippets.map(this::toResponse);
     }
