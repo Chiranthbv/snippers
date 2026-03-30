@@ -25,94 +25,14 @@ const SORT_OPTIONS = [
     { value: "popular", label: "Most Viewed" },
 ];
 
-// Demo snippets for showcase (used when API isn't connected)
-const demoSnippets: Snippet[] = [
-    {
-        id: 1,
-        title: "Quick Sort Algorithm",
-        content: `function quickSort(arr) {\n  if (arr.length <= 1) return arr;\n  const pivot = arr[0];\n  const left = arr.slice(1).filter(x => x < pivot);\n  const right = arr.slice(1).filter(x => x >= pivot);\n  return [...quickSort(left), pivot, ...quickSort(right)];\n}`,
-        language: "JavaScript",
-        visibility: "PUBLIC",
-        shortUrl: "qs1234",
-        viewCount: 342,
-        expiresAt: null,
-        createdAt: new Date(Date.now() - 3600000).toISOString(),
-        updatedAt: new Date().toISOString(),
-        username: "alexdev",
-    },
-    {
-        id: 2,
-        title: "Python List Comprehension",
-        content: `# Generate squares of even numbers\nsquares = [x**2 for x in range(20) if x % 2 == 0]\nprint(squares)\n\n# Flatten 2D list\nmatrix = [[1,2,3], [4,5,6], [7,8,9]]\nflat = [n for row in matrix for n in row]`,
-        language: "Python",
-        visibility: "PUBLIC",
-        shortUrl: "py5678",
-        viewCount: 218,
-        expiresAt: null,
-        createdAt: new Date(Date.now() - 86400000).toISOString(),
-        updatedAt: new Date().toISOString(),
-        username: "pythonista",
-    },
-    {
-        id: 3,
-        title: "TypeScript Generic Utility",
-        content: `type DeepPartial<T> = {\n  [P in keyof T]?: T[P] extends object\n    ? DeepPartial<T[P]>\n    : T[P];\n};\n\ninterface Config {\n  db: { host: string; port: number };\n  cache: { ttl: number };\n}\n\nconst partial: DeepPartial<Config> = {\n  db: { host: "localhost" }\n};`,
-        language: "TypeScript",
-        visibility: "PUBLIC",
-        shortUrl: "ts9012",
-        viewCount: 156,
-        expiresAt: null,
-        createdAt: new Date(Date.now() - 172800000).toISOString(),
-        updatedAt: new Date().toISOString(),
-        username: "tsmaster",
-    },
-    {
-        id: 4,
-        title: "Java Stream API Example",
-        content: `List<String> names = people.stream()\n    .filter(p -> p.getAge() > 18)\n    .sorted(Comparator.comparing(Person::getName))\n    .map(Person::getName)\n    .collect(Collectors.toList());\n\nSystem.out.println(names);`,
-        language: "Java",
-        visibility: "PUBLIC",
-        shortUrl: "jv3456",
-        viewCount: 289,
-        expiresAt: null,
-        createdAt: new Date(Date.now() - 259200000).toISOString(),
-        updatedAt: new Date().toISOString(),
-        username: "javaguru",
-    },
-    {
-        id: 5,
-        title: "Go Goroutine Pattern",
-        content: `func fetchAll(urls []string) []Result {\n    ch := make(chan Result, len(urls))\n    for _, url := range urls {\n        go func(u string) {\n            resp, err := http.Get(u)\n            ch <- Result{URL: u, Resp: resp, Err: err}\n        }(url)\n    }\n    results := make([]Result, len(urls))\n    for i := range results {\n        results[i] = <-ch\n    }\n    return results\n}`,
-        language: "Go",
-        visibility: "PUBLIC",
-        shortUrl: "go7890",
-        viewCount: 174,
-        expiresAt: null,
-        createdAt: new Date(Date.now() - 345600000).toISOString(),
-        updatedAt: new Date().toISOString(),
-        username: "gopher",
-    },
-    {
-        id: 6,
-        title: "Rust Error Handling",
-        content: `use std::fs;\nuse std::io;\n\nfn read_config(path: &str) -> Result<String, io::Error> {\n    let content = fs::read_to_string(path)?;\n    Ok(content.trim().to_string())\n}\n\nfn main() {\n    match read_config("config.toml") {\n        Ok(cfg) => println!("Config: {}", cfg),\n        Err(e) => eprintln!("Error: {}", e),\n    }\n}`,
-        language: "Rust",
-        visibility: "PUBLIC",
-        shortUrl: "rs2345",
-        viewCount: 131,
-        expiresAt: null,
-        createdAt: new Date(Date.now() - 432000000).toISOString(),
-        updatedAt: new Date().toISOString(),
-        username: "rustacean",
-    },
-];
-
 export default function BrowsePage() {
-    const [snippets, setSnippets] = useState<Snippet[]>(demoSnippets);
+    const [snippets, setSnippets] = useState<Snippet[]>([]);
     const [search, setSearch] = useState("");
     const [language, setLanguage] = useState("All");
     const [sort, setSort] = useState("newest");
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [page, setPage] = useState(0);
+    const [totalPages, setTotalPages] = useState(0);
 
     const fetchSnippets = useCallback(async () => {
         setLoading(true);
@@ -122,36 +42,27 @@ export default function BrowsePage() {
                 search: search || undefined,
                 language: language !== "All" ? language.toLowerCase() : undefined,
                 sort,
+                page,
+                size: 12,
             });
-            if (data.content && data.content.length > 0) {
-                setSnippets(data.content);
-            }
+            setSnippets(data.content || []);
+            setTotalPages(data.totalPages || 0);
         } catch {
-            // API not available, keep demo data
+            console.error("Failed to fetch snippets");
+            setSnippets([]);
         } finally {
             setLoading(false);
         }
-    }, [search, language, sort]);
+    }, [search, language, sort, page]);
 
     useEffect(() => {
         fetchSnippets();
     }, [fetchSnippets]);
 
-    const filtered = snippets.filter((s) => {
-        const matchLang =
-            language === "All" ||
-            s.language.toLowerCase() === language.toLowerCase();
-        const matchSearch =
-            !search ||
-            s.title.toLowerCase().includes(search.toLowerCase()) ||
-            s.content.toLowerCase().includes(search.toLowerCase());
-        return matchLang && matchSearch;
-    });
-
-    const sorted = [...filtered].sort((a, b) => {
-        if (sort === "popular") return b.viewCount - a.viewCount;
-        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-    });
+    // Reset page when filters change
+    useEffect(() => {
+        setPage(0);
+    }, [search, language, sort]);
 
     return (
         <div className="min-h-screen relative">
@@ -194,7 +105,7 @@ export default function BrowsePage() {
 
                     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                         {/* Language Tabs */}
-                        <div className="flex flex-wrap gap-2">
+                        <div className="language-tabs flex-1">
                             {LANGUAGES.map((lang) => (
                                 <button
                                     key={lang}
@@ -229,7 +140,7 @@ export default function BrowsePage() {
 
                 {/* Results Count */}
                 <p className="text-txt-muted text-sm mb-6">
-                    {sorted.length} snippet{sorted.length !== 1 ? "s" : ""} found
+                    {snippets.length} snippet{snippets.length !== 1 ? "s" : ""} found
                 </p>
 
                 {/* Snippets Grid */}
@@ -247,22 +158,47 @@ export default function BrowsePage() {
                             </div>
                         ))}
                     </div>
-                ) : sorted.length > 0 ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {sorted.map((snippet, i) => (
-                            <SnippetCard
-                                key={snippet.id}
-                                title={snippet.title}
-                                language={snippet.language}
-                                content={snippet.content}
-                                shortUrl={snippet.shortUrl}
-                                username={snippet.username}
-                                viewCount={snippet.viewCount}
-                                createdAt={snippet.createdAt}
-                                index={i}
-                            />
-                        ))}
-                    </div>
+                ) : snippets.length > 0 ? (
+                    <>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                            {snippets.map((snippet, i) => (
+                                <SnippetCard
+                                    key={snippet.id}
+                                    title={snippet.title}
+                                    language={snippet.language}
+                                    content={snippet.content}
+                                    shortUrl={snippet.shortUrl}
+                                    username={snippet.username}
+                                    viewCount={snippet.viewCount}
+                                    createdAt={snippet.createdAt}
+                                    index={i}
+                                />
+                            ))}
+                        </div>
+
+                        {/* Pagination */}
+                        {totalPages > 1 && (
+                            <div className="flex items-center justify-center gap-2 mt-10">
+                                <button
+                                    onClick={() => setPage(p => Math.max(0, p - 1))}
+                                    disabled={page === 0}
+                                    className="btn-secondary px-4 py-2 text-sm disabled:opacity-30 disabled:cursor-not-allowed"
+                                >
+                                    Previous
+                                </button>
+                                <span className="text-txt-muted text-sm px-4">
+                                    Page {page + 1} of {totalPages}
+                                </span>
+                                <button
+                                    onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))}
+                                    disabled={page >= totalPages - 1}
+                                    className="btn-secondary px-4 py-2 text-sm disabled:opacity-30 disabled:cursor-not-allowed"
+                                >
+                                    Next
+                                </button>
+                            </div>
+                        )}
+                    </>
                 ) : (
                     <div className="text-center py-20">
                         <p className="text-txt-muted text-lg">No snippets found</p>

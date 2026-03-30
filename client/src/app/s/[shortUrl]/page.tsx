@@ -17,35 +17,6 @@ const CodeBlock = dynamic(() => import("@/components/CodeBlock"), { ssr: false }
 import type { Snippet } from "@/lib/api";
 import toast from "react-hot-toast";
 
-// Demo snippet for showcase
-const demoSnippet: Snippet = {
-    id: 1,
-    title: "Quick Sort Algorithm",
-    content: `function quickSort(arr) {
-  if (arr.length <= 1) return arr;
-
-  const pivot = arr[Math.floor(arr.length / 2)];
-  const left = arr.filter(x => x < pivot);
-  const middle = arr.filter(x => x === pivot);
-  const right = arr.filter(x => x > pivot);
-
-  return [...quickSort(left), ...middle, ...quickSort(right)];
-}
-
-// Example usage
-const numbers = [64, 34, 25, 12, 22, 11, 90];
-console.log(quickSort(numbers));
-// → [11, 12, 22, 25, 34, 64, 90]`,
-    language: "JavaScript",
-    visibility: "PUBLIC",
-    shortUrl: "qs1234",
-    viewCount: 342,
-    expiresAt: null,
-    createdAt: new Date(Date.now() - 86400000).toISOString(),
-    updatedAt: new Date().toISOString(),
-    username: "alexdev",
-};
-
 export default function ViewSnippetPage() {
     const params = useParams();
     const shortUrl = params.shortUrl as string;
@@ -66,8 +37,7 @@ export default function ViewSnippetPage() {
                 } else if (message.includes("403") || message.includes("forbidden")) {
                     setError("forbidden");
                 } else {
-                    // Use demo data when API is not available
-                    setSnippet(demoSnippet);
+                    setError("notfound");
                 }
             } finally {
                 setLoading(false);

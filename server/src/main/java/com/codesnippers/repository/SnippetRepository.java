@@ -26,7 +26,7 @@ public interface SnippetRepository extends JpaRepository<Snippet, Long> {
             @Param("search") String search,
             Pageable pageable);
 
-    List<Snippet> findByExpiresAtBeforeAndExpiresAtIsNotNull(LocalDateTime dateTime);
+    List<Snippet> findByExpiresAtBeforeAndExpiresAtIsNotNullAndPermanentFalse(LocalDateTime dateTime);
 
     boolean existsByShortUrl(String shortUrl);
 }

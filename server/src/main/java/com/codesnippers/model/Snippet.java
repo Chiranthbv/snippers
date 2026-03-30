@@ -42,6 +42,10 @@ public class Snippet {
     @Builder.Default
     private Integer viewCount = 0;
 
+    @Column(name = "permanent")
+    @Builder.Default
+    private Boolean permanent = false;
+
     @Column(name = "expires_at")
     private LocalDateTime expiresAt;
 

@@ -17,7 +17,7 @@ public class CleanupService {
 
     @Scheduled(fixedRate = 3600000) // Every hour
     public void cleanupExpiredSnippets() {
-        var expired = snippetRepository.findByExpiresAtBeforeAndExpiresAtIsNotNull(LocalDateTime.now());
+        var expired = snippetRepository.findByExpiresAtBeforeAndExpiresAtIsNotNullAndPermanentFalse(LocalDateTime.now());
         if (!expired.isEmpty()) {
             snippetRepository.deleteAll(expired);
             log.info("Cleaned up {} expired snippets", expired.size());
