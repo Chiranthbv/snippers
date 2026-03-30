@@ -52,8 +52,8 @@ public class SnippetService {
 
         Pageable pageable = PageRequest.of(page, size, sorting);
         Page<Snippet> snippets = snippetRepository.findPublicSnippets(
-                language != null && !language.isBlank() ? language : null,
-                search != null && !search.isBlank() ? search : null,
+                language != null && !language.isBlank() ? language : "",
+                search != null && !search.isBlank() ? search : "",
                 pageable);
 
         return snippets.map(this::toResponse);

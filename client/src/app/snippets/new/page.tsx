@@ -55,7 +55,7 @@ export default function CreateSnippetPage() {
                 language: language.toLowerCase(),
                 content,
                 visibility,
-                expiresAt: expiresAt ? new Date(expiresAt).toISOString() : null,
+                expiresAt: expiresAt ? expiresAt : null,
             });
             toast.success("Snippet created!");
             router.push(`/s/${snippet.shortUrl}`);
