@@ -10,8 +10,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
@@ -24,7 +23,9 @@ public class DataSeeder implements CommandLineRunner {
     private final PasswordEncoder passwordEncoder;
 
     @Override
+    @Transactional
     public void run(String... args) {
+
         // Create seed users if they don't exist
         User u1 = getOrCreateUser("chiranth", "chiranth@codesnippers.dev");
         User u2 = getOrCreateUser("alexdev", "alex@codesnippers.dev");
@@ -159,7 +160,6 @@ public class DataSeeder implements CommandLineRunner {
         log.info("Seeding complete. Added {} new permanent snippets.", added);
     }
 
-    // ── Helpers ──────────────────────────────────────────
 
     private User getOrCreateUser(String username, String email) {
         return userRepository.findByUsername(username)

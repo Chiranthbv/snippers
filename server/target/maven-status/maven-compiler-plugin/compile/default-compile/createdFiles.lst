@@ -10,6 +10,7 @@ com\codesnippers\repository\UserRepository.class
 com\codesnippers\model\Snippet$SnippetBuilder.class
 com\codesnippers\model\User$UserBuilder.class
 com\codesnippers\service\AuthService.class
+com\codesnippers\config\DatabaseMigration.class
 com\codesnippers\service\JwtService.class
 com\codesnippers\config\SecurityConfig.class
 com\codesnippers\dto\SnippetResponse$SnippetResponseBuilder.class

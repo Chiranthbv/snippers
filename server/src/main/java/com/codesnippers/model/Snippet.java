@@ -28,7 +28,7 @@ public class Snippet {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
-    @Column(length = 50)
+    @Column(length = 50, columnDefinition = "VARCHAR(50)")
     private String language;
 
     @Enumerated(EnumType.STRING)

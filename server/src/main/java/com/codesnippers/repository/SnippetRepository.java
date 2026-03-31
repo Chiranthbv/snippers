@@ -15,6 +15,8 @@ public interface SnippetRepository extends JpaRepository<Snippet, Long>, org.spr
 
     Optional<Snippet> findByShortUrl(String shortUrl);
 
+    Page<Snippet> findByVisibility(Snippet.Visibility visibility, Pageable pageable);
+
     List<Snippet> findByUserIdOrderByCreatedAtDesc(Long userId);
 
 

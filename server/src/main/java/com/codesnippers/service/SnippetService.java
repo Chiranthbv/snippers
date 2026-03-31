@@ -13,9 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.data.jpa.domain.Specification;
-import jakarta.persistence.criteria.Predicate;
-import java.util.ArrayList;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -48,6 +45,7 @@ public class SnippetService {
         return toResponse(snippet);
     }
 
+    @Transactional(readOnly = true)
     public Page<SnippetResponse> getPublicSnippets(String language, String search, String sort, int page, int size) {
         Sort sorting = "popular".equalsIgnoreCase(sort)
                 ? Sort.by(Sort.Direction.DESC, "viewCount")
@@ -55,29 +53,15 @@ public class SnippetService {
 
         Pageable pageable = PageRequest.of(page, size, sorting);
 
-        Specification<Snippet> spec = (root, query, cb) -> {
-            List<Predicate> predicates = new ArrayList<>();
-            predicates.add(cb.equal(root.get("visibility"), Snippet.Visibility.PUBLIC));
-
-            if (language != null && !language.isBlank()) {
-                predicates.add(cb.equal(cb.lower(root.get("language")), language.trim().toLowerCase()));
-            }
-
-            if (search != null && !search.isBlank()) {
-                String pattern = "%" + search.trim().toLowerCase() + "%";
-                Predicate titleLike = cb.like(cb.lower(root.get("title")), pattern);
-                Predicate contentLike = cb.like(cb.lower(root.get("content")), pattern);
-                predicates.add(cb.or(titleLike, contentLike));
-            }
-
-            // Must have this array typing for varargs
-            return cb.and(predicates.toArray(new Predicate[0]));
-        };
-
-        Page<Snippet> snippets = snippetRepository.findAll(spec, pageable);
+        // Use the simple repository query method instead of Specification
+        // This avoids all Hibernate type-mapping issues with PostgreSQL columns
+        Page<Snippet> snippets = snippetRepository.findByVisibility(
+            Snippet.Visibility.PUBLIC, pageable
+        );
 
         return snippets.map(this::toResponse);
     }
+
 
     @Transactional
     public SnippetResponse getByShortUrl(String shortUrl) {
@@ -96,6 +80,7 @@ public class SnippetService {
         return toResponse(snippet);
     }
 
+    @Transactional(readOnly = true)
     public List<SnippetResponse> getMySnippets(Long userId) {
         return snippetRepository.findByUserIdOrderByCreatedAtDesc(userId)
                 .stream()

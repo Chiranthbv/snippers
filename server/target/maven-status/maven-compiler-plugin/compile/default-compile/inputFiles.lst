@@ -2,6 +2,7 @@ C:\Users\WIN\Desktop\codesnip\server\src\main\java\com\codesnippers\config\DataS
 C:\Users\WIN\Desktop\codesnip\server\src\main\java\com\codesnippers\service\AuthService.java
 C:\Users\WIN\Desktop\codesnip\server\src\main\java\com\codesnippers\model\User.java
 C:\Users\WIN\Desktop\codesnip\server\src\main\java\com\codesnippers\service\JwtService.java
+C:\Users\WIN\Desktop\codesnip\server\src\main\java\com\codesnippers\config\DatabaseMigration.java
 C:\Users\WIN\Desktop\codesnip\server\src\main\java\com\codesnippers\dto\LoginRequest.java
 C:\Users\WIN\Desktop\codesnip\server\src\main\java\com\codesnippers\dto\RegisterRequest.java
 C:\Users\WIN\Desktop\codesnip\server\src\main\java\com\codesnippers\dto\CreateSnippetRequest.java
